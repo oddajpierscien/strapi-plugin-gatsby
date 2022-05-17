@@ -25,21 +25,26 @@ const SettingsList = forwardRef(
     const { formatMessage } = useIntl();
     const toggleNotification = useNotification();
     const queryClient = useQueryClient();
-    const [modifiedData, setModifiedData] = useState(initialData.previews);
-    const [contentSyncURL, setContentSyncURL] = useState(initialData.contentSyncURL);
+    const [modifiedData, setModifiedData] = useState(initialData.contentTypes);
+    const { buildWebhookURL, previewWebhookURL, contentSyncURL } = initialData;
+    const [settings, setSettings] = useState({
+      buildWebhookURL,
+      previewWebhookURL,
+      contentSyncURL,
+    });
 
-    // Because of the tabs and since we only display the save button when the settings tab is activated we need this trick to retrieve the
-    // content sync url
+    // Because of the tabs and since we only display the save button when the
+    // settings tab is activated we need this trick to retrieve the urls.
     // Plus it avoids having to synchronize the state with the useQueries hook
     useImperativeHandle(ref, () => ({
-      getContentSyncURL: () => {
-        return { contentSyncURL };
+      getSettings: () => {
+        return settings;
       },
     }));
 
     const mutation = useMutation(
       body => {
-        return axiosInstance.put(`/${pluginId}/previews`, body);
+        return axiosInstance.put(`/${pluginId}/content-types`, body);
       },
       {
         // Opitmistic response
@@ -48,7 +53,7 @@ const SettingsList = forwardRef(
 
           const previousResponse = queryClient.getQueryData(`${pluginId}-settings`);
 
-          queryClient.setQueryData(`${pluginId}-settings`, old => ({ ...old, previews: body }));
+          queryClient.setQueryData(`${pluginId}-settings`, old => ({ ...old, contentTypes: body }));
 
           return { previousResponse };
         },
@@ -69,15 +74,14 @@ const SettingsList = forwardRef(
     );
     const singleTypes = sortContentTypes(contentTypes.filter(({ kind }) => kind === 'singleType'));
 
-    const handleChange = uid => {
-      const updatedState = { ...modifiedData, [uid]: !modifiedData[uid] };
+    const handleChange = (uid, field) => {
+      const updatedState = {
+        ...modifiedData,
+        [uid]: { ...modifiedData[uid], [field]: !modifiedData[uid][field] },
+      };
       setModifiedData(updatedState);
 
       mutation.mutate(updatedState);
-    };
-
-    const handleChangeContentSyncURL = ({ target: { value } }) => {
-      setContentSyncURL(value);
     };
 
     const handleTabChange = tabIndex => onToggleDisplaySaveButton(tabIndex === 2);
@@ -118,13 +122,12 @@ const SettingsList = forwardRef(
                 />
               </StyledBox>
             </TabPanel>
-
             <TabPanel>
               <StyledBox background="neutral0">
                 <SyncSettings
-                  contentSyncURL={contentSyncURL}
+                  settings={settings}
+                  setSettings={setSettings}
                   formErrors={formErrors}
-                  onChange={handleChangeContentSyncURL}
                 />
               </StyledBox>
             </TabPanel>
@@ -140,11 +143,23 @@ SettingsList.displayName = 'SettingsList';
 SettingsList.propTypes = {
   contentTypes: PropTypes.array.isRequired,
   formErrors: PropTypes.shape({
+    previewWebhookURL: PropTypes.string,
+    buildWebhookURL: PropTypes.string,
     contentSyncURL: PropTypes.string,
   }).isRequired,
   initialData: PropTypes.shape({
-    contentSyncURL: PropTypes.string,
-    previews: PropTypes.object.isRequired,
+    previewWebhookURL: PropTypes.shape({
+      value: PropTypes.string,
+      enabled: PropTypes.bool,
+    }),
+    buildWebhookURL: PropTypes.shape({
+      value: PropTypes.string,
+      enabled: PropTypes.bool,
+    }),
+    contentSyncURL: PropTypes.shape({
+      value: PropTypes.string,
+    }),
+    contentTypes: PropTypes.object.isRequired,
   }).isRequired,
   onToggleDisplaySaveButton: PropTypes.func.isRequired,
 };

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import upperFirst from 'lodash/upperFirst';
 import { EmptyStateLayout } from '@strapi/design-system/EmptyStateLayout';
 import EmptyDocuments from '@strapi/icons/EmptyDocuments';
 import { Table, Thead, Tr, Th, Tbody, Td } from '@strapi/design-system/Table';
@@ -28,10 +27,10 @@ const ContentTypes = ({ contentTypes, modifiedData, onChange }) => {
   }
 
   return (
-    <Table colCount={2} rowCount={rowCount}>
+    <Table colCount={3} rowCount={rowCount}>
       <Thead>
         <Tr>
-          <Th width="80%">
+          <Th width="40%">
             <Typography variant="sigma" textColor="neutral600">
               {formatMessage({
                 id: getTrad('Settings.table.header-name'),
@@ -42,20 +41,28 @@ const ContentTypes = ({ contentTypes, modifiedData, onChange }) => {
           <Th width="20%">
             <Typography variant="sigma" textColor="neutral600">
               {formatMessage({
-                id: getTrad('Settings.table.header-preview'),
-                defaultMessage: 'Enable preview',
+                id: getTrad('Settings.table.header-build'),
+                defaultMessage: 'Should trigger build',
+              })}
+            </Typography>
+          </Th>
+          <Th width="20%">
+            <Typography variant="sigma" textColor="neutral600">
+              {formatMessage({
+                id: getTrad('Settings.table.header-preview-button'),
+                defaultMessage: 'Show preview button',
               })}
             </Typography>
           </Th>
         </Tr>
       </Thead>
       <Tbody>
-        {contentTypes.map(({ info: { singularName }, uid }) => {
+        {contentTypes.map(({ info: { singularName, displayName }, uid }) => {
           return (
             <Tr key={uid}>
               <Td>
                 <Typography fontWeight="semiBold" textColor="neutral800">
-                  {upperFirst(singularName)}
+                  {displayName}
                 </Typography>
               </Td>
               <Td>
@@ -73,14 +80,39 @@ const ContentTypes = ({ contentTypes, modifiedData, onChange }) => {
                       id: getTrad('Settings.table.th-status'),
                       defaultMessage: 'Status',
                     })}`}
-                    selected={modifiedData[uid]}
+                    selected={modifiedData[uid].build}
                     onChange={() => {
-                      onChange(uid);
+                      onChange(uid, 'build');
                     }}
                     visibleLabels
                   />
                 </Flex>
               </Td>
+              {!['file'].includes(singularName) && (
+                <Td>
+                  <Flex>
+                    <Switch
+                      onLabel={formatMessage({
+                        id: 'Settings.content-type.enabled',
+                        defaultMessage: 'Enabled',
+                      })}
+                      offLabel={formatMessage({
+                        id: 'Settings.content-type.disabled',
+                        defaultMessage: 'Disabled',
+                      })}
+                      label={`${singularName} ${formatMessage({
+                        id: getTrad('Settings.table.th-status'),
+                        defaultMessage: 'Status',
+                      })}`}
+                      selected={modifiedData[uid].preview}
+                      onChange={() => {
+                        onChange(uid, 'preview');
+                      }}
+                      visibleLabels
+                    />
+                  </Flex>
+                </Td>
+              )}
             </Tr>
           );
         })}

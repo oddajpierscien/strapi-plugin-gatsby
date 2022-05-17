@@ -3,9 +3,12 @@
 // eslint-disable-next-line
 const { yup, validateYupSchema } = require('@strapi/utils');
 
-const createPreviewContentTypesSchema = contentTypes => {
+const createContentTypesSchema = contentTypes => {
   const fields = Object.values(contentTypes).reduce((acc, current) => {
-    acc[current.uid] = yup.boolean();
+    acc[current.uid] = yup.object().shape({
+      build: yup.boolean(),
+      preview: yup.boolean(),
+    });
 
     return acc;
   }, {});
@@ -24,15 +27,25 @@ const createPreviewContentTypesSchema = contentTypes => {
     .required();
 };
 
-const contentSyncSchema = yup
+const settingsSchema = yup
   .object()
   .shape({
-    contentSyncURL: yup.string().url().required(),
+    previewWebhookURL: yup.object().shape({
+      value: yup.string().url(),
+      enabled: yup.boolean(),
+    }),
+    buildWebhookURL: yup.object().shape({
+      value: yup.string().url(),
+      enabled: yup.boolean(),
+    }),
+    contentSyncURL: yup.object().shape({
+      value: yup.string().url(),
+    }),
   })
   .required();
 
 module.exports = {
-  validatePreviewInput: ({ contentTypes }) =>
-    validateYupSchema(createPreviewContentTypesSchema(contentTypes)),
-  validateContentSyncURL: validateYupSchema(contentSyncSchema),
+  validateContentTypesInput: ({ contentTypes }) =>
+    validateYupSchema(createContentTypesSchema(contentTypes)),
+  validateSettings: validateYupSchema(settingsSchema),
 };

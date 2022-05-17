@@ -13,7 +13,7 @@ export default {
         id: pluginId,
         intlLabel: {
           id: getTrad('Settings.section-label'),
-          defaultMessage: 'Gatsby preview plugin',
+          defaultMessage: 'Gatsby plugin',
         },
       },
       [
@@ -26,7 +26,7 @@ export default {
           to: `/settings/${pluginId}`,
           Component: async () => {
             const component = await import(
-              /* webpackChunkName: "gatsby-preview-settings-page" */ './pages/SettingsPage'
+              /* webpackChunkName: "gatsby-settings-page" */ './pages/SettingsPage'
             );
 
             return component;
@@ -43,7 +43,7 @@ export default {
   },
   bootstrap(app) {
     app.injectContentManagerComponent('editView', 'right-links', {
-      name: 'gatsby-preview-button',
+      name: 'gatsby-preview',
       Component: OpenPreviewButton,
     });
   },

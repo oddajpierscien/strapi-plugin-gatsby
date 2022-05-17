@@ -27,19 +27,20 @@ const OpenPreviewButton = () => {
     return null;
   }
 
-  if (!data.previews[uid]) {
+  if (!data.contentTypes[uid]?.preview) {
     return null;
   }
 
   const handleClick = () => {
-    const url = `${data.contentSyncURL}/gatsby-source-strapi/${uid}-${initialData.id}-${initialData.updatedAt}/${initialData.id}/`;
+    const plugin = encodeURIComponent(data?.sourcePlugin);
+    const url = `${data.contentSyncURL.value}/${plugin}/${uid}-${initialData.id}-${initialData.updatedAt}/${initialData.id}/`;
 
     window.open(url, '_blank').focus();
   };
 
   return (
     <Button
-      disabled={!data.contentSyncURL || isCreatingEntry}
+      disabled={!data?.contentSyncURL?.value || isCreatingEntry}
       onClick={handleClick}
       startIcon={<Eye />}
       type="button"

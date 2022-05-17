@@ -8,7 +8,7 @@ export const fetchContentTypes = async () => {
     } = await axiosInstance.get('/content-manager/content-types');
 
     // Only display content types that are managed by the CM
-    return data.filter(({ isDisplayed }) => isDisplayed);
+    return data.filter(({ isDisplayed, apiID }) => isDisplayed || apiID === 'file');
   } catch (err) {
     throw new Error(err);
   }
@@ -26,4 +26,4 @@ export const fetchSettings = async () => {
   }
 };
 
-export const putSettings = body => axiosInstance.put(`/${pluginId}/content-sync-url`, body);
+export const putSettings = body => axiosInstance.put(`/${pluginId}/settings`, body);

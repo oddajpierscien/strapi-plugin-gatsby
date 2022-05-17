@@ -1,6 +1,8 @@
 'use strict';
 
 module.exports = {
-  default: {},
-  validator() {},
+  default: {
+    sourcePlugin: 'gatsby-source-strapi',
+    headers: {},
+  },
 };

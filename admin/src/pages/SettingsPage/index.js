@@ -16,7 +16,7 @@ import pluginId from '../../pluginId';
 import getTrad from '../../utils/getTrad';
 import SettingsList from '../../components/SettingsList';
 import { fetchContentTypes, fetchSettings, putSettings } from './utils/api';
-import contentSyncSchema from './utils/schema';
+import settingsSchema from './utils/schema';
 
 const SettingsPage = () => {
   const { formatMessage } = useIntl();
@@ -46,6 +46,8 @@ const SettingsPage = () => {
 
       queryClient.setQueryData(`${pluginId}-settings`, old => ({
         ...old,
+        buildWebhookURL: body.buildWebhookURL,
+        previewWebhookURL: body.previewWebhookURL,
         contentSyncURL: body.contentSyncURL,
       }));
 
@@ -65,13 +67,13 @@ const SettingsPage = () => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    if (ref?.current?.getContentSyncURL) {
-      const body = ref.current.getContentSyncURL();
+    if (ref?.current?.getSettings) {
+      const body = ref.current.getSettings();
 
       let errors = {};
 
       try {
-        await contentSyncSchema.validate(body, { abortEarly: false });
+        await settingsSchema.validate(body, { abortEarly: false });
 
         mutation.mutate(body);
         setFormErrors({});

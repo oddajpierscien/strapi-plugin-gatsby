@@ -1,32 +1,23 @@
 {
-  "name": "@strapi/plugin-gatsby-preview",
-  "version": "1.0.0-beta.0",
+  "name": "@relate-app/strapi-plugin-gatsby",
+  "version": "1.0.6",
   "description": "Enable CMS preview for Gatsby cloud",
   "repository": {
     "type": "git",
-    "url": "https://github.com/strapi/strapi.git",
+    "url": "https://github.com/relate-app/strapi-plugin-gatsby.git",
     "directory": "packages/plugins/documentation"
   },
   "license": "SEE LICENSE IN LICENSE",
-  "author": {
-    "name": "Strapi Solutions SAS",
-    "email": "hi@strapi.io",
-    "url": "https://strapi.io"
+  "dependencies": {
+    "cross-fetch": "^3.1.5",
+    "throttle-debounce": "^5.0.0"
   },
-  "maintainers": [
-    {
-      "name": "Strapi Solutions SAS",
-      "email": "hi@strapi.io",
-      "url": "https://strapi.io"
-    }
-  ],
-  "dependencies": {},
   "peerDependencies": {
     "@strapi/strapi": "^4.0.0",
     "@strapi/utils": "^4.0.0"
   },
   "engines": {
-    "node": ">=12.x. <=16.x.x",
+    "node": ">=12.x. <=18.x.x",
     "npm": ">=6.0.0"
   },
   "scripts": {
@@ -41,9 +32,9 @@
     "prettier:other": "prettier \"**/*.{md,css,scss,yaml,yml}\""
   },
   "strapi": {
-    "name": "gatsby-preview",
-    "displayName": "Gatsby preview",
-    "description": "Preview content changes from your team in Gatsby Cloud before they get deployed to production",
+    "name": "gatsby",
+    "displayName": "Gatsby",
+    "description": "Push content changes from your team in Gatsby Cloud to preview and production",
     "kind": "plugin"
   },
   "devDependencies": {
@@ -60,15 +51,9 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
-    "husky": "3.0.0",
     "lint-staged": "10.5.4",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.5.1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "*.{js,md,css,scss,yaml,yml}": [

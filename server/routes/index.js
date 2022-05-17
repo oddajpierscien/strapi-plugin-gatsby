@@ -14,16 +14,16 @@ module.exports = {
       },
       {
         method: 'PUT',
-        path: '/previews',
-        handler: 'settings.updatePreviews',
+        path: '/content-types',
+        handler: 'settings.updateContentTypes',
         config: {
           policies: ['admin::isAuthenticatedAdmin'],
         },
       },
       {
         method: 'PUT',
-        path: '/content-sync-url',
-        handler: 'settings.updateContentSyncURL',
+        path: '/settings',
+        handler: 'settings.updateSettings',
         config: {
           policies: ['admin::isAuthenticatedAdmin'],
         },
