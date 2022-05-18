@@ -34,8 +34,10 @@ module.exports = {
   ...
   gatsby: {
     enabled: true,
-    headers: {
-      'x-gatsby-cloud-data-source': '@relate-app/gatsby-source-strapi',
+    config: {
+      headers: {
+        'x-gatsby-cloud-data-source': '@relate-app/gatsby-source-strapi',
+      },
     },
   },
   ...
@@ -49,7 +51,9 @@ module.exports = {
   ...
   gatsby: {
     enabled: true,
-    sourcePlugin: '@relate-app/gatsby-source-strapi',
+    config: {
+      sourcePlugin: '@relate-app/gatsby-source-strapi',
+    },
   },
   ...
 };
