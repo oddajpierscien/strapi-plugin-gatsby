@@ -10,7 +10,7 @@
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
     "cross-fetch": "^3.1.5",
-    "throttle-debounce": "^5.0.0"
+    "throttle-debounce": "^5.0.2"
   },
   "peerDependencies": {
     "@strapi/strapi": "^4.0.0",
